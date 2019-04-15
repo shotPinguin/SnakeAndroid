@@ -307,6 +307,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //envoie du score dans le web service lors du game over
     public void endGame() {
         WebService webService = new WebService();
         webService.addScore(this.currentScore);

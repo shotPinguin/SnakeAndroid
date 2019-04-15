@@ -35,6 +35,13 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
         this.mCallBack = callback;
     }
 
+    //parametres des requetes
+    private final String METHOD = "GET";
+    private final Boolean OUTPUT = true;
+    private final int CONNECT_TIMEOUT = 10000;
+    private final int READ_TIMEOUT = 5000;
+
+
     @Override
     protected Boolean doInBackground(URL... urls) {
         Boolean isConnected = false;
@@ -47,10 +54,10 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
                 HttpURLConnection connection = (HttpURLConnection) urls[0].openConnection();
                 Log.d("webservice", urls[0]+"");
 
-                connection.setRequestMethod("GET");
-                connection.setDoOutput(true);
-                connection.setConnectTimeout(10000);
-                connection.setReadTimeout(5000);
+                connection.setRequestMethod(METHOD);
+                connection.setDoOutput(OUTPUT);
+                connection.setConnectTimeout(CONNECT_TIMEOUT);
+                connection.setReadTimeout(READ_TIMEOUT);
 
                 String c = CookieManager.getInstance().getCookie("snake");
                 Log.d("webservice", c);
@@ -60,7 +67,7 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
                 Log.d("webservice", connection.getResponseCode()+"");
 
 
-
+                //HttpURLConnection.HTTP_OK est egale à 200
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     Map<String, List<String>> headerFields = connection.getHeaderFields();
                     List<String> cookiesHeader = headerFields.get("Set-Cookie");
@@ -96,9 +103,7 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
                 nbAttempt++;
             } while(!isConnected && nbAttempt < MAX_ATTEMPT);
         } catch(Exception ex) {
-            Log.d("webservice", "catch");
-            Logger logger = Logger.getAnonymousLogger();
-            logger.log(Level.SEVERE, "an exception was thrown", ex);
+            Log.d("webservice", "error");
         }
 
         return isConnected;
@@ -107,6 +112,7 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         if(success) {
+            //execution de la callback passée en parametre lors de l'instantiation de la task
             mCallBack.onResponse(mDocument);
         }
 

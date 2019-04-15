@@ -61,7 +61,7 @@ public class WebService extends Service implements RequestHandler{
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.d("webservice", "onStartCommand");
-        //LoginTask loginTask = new LoginTask(this);
+        //instantiation d'une task (ici login) et de sa callback
         RequestTask requestTask = new RequestTask(this, new RequestHandler() {
             @Override
             public void onResponse(Document document) {
@@ -69,8 +69,8 @@ public class WebService extends Service implements RequestHandler{
             }
         });
         try {
+            //url de login pat defaut
             URL url = new URL("http://snake.struct-it.fr/login.php?user=snake&pwd=test");
-            //loginTask.execute(url);
             requestTask.execute(url);
 
         } catch (Exception ex) {
@@ -86,12 +86,15 @@ public class WebService extends Service implements RequestHandler{
 
             mDocument.normalizeDocument();
             Element root = mDocument.getDocumentElement();
+
             this.apiData.id = root.getAttribute("id");
+            //stockage de l'url de base pour la réutiliser et etre tranquille si elle change
             this.apiData.path = root.getAttribute("url");
 
             Log.d("webservice", root.getAttribute("id"));
             Log.d("webservice", root.getAttribute("url"));
 
+            //instantiation d'une task (ici score list) et de sa callback
             RequestTask requestTask = new RequestTask(this, new RequestHandler() {
                 @Override
                 public void onResponse(Document document) {
@@ -100,7 +103,6 @@ public class WebService extends Service implements RequestHandler{
             });
             try {
                 URL url = new URL(this.apiData.path+"score?list");
-                //scoreTask.execute(url);
                 requestTask.execute(url);
 
             } catch (Exception ex) {
@@ -116,6 +118,7 @@ public class WebService extends Service implements RequestHandler{
 
         Log.d("webservice", "notifyScore");
 
+        //parcours du xml reçu pour créer une liste de scores
         NodeList nodes = mDocument.getElementsByTagName("score");
 
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -131,16 +134,16 @@ public class WebService extends Service implements RequestHandler{
 
         Log.d("webservice", "addScore");
 
+        //instantiation d'une task (ici add score) et de sa callback
         RequestTask requestTask = new RequestTask(this, new RequestHandler() {
             @Override
             public void onResponse(Document document) {
-                //notifyScore(document);
                 Log.d("webservice", "score added");
             }
         });
         try {
+            //création d'un nom de joueur aléatoire + ajout score en fin d'url
             URL url = new URL(this.apiData.path+"score?player=guest"+getRandomNumberInRange(0,9999999)+"&value="+currentScore);
-            //scoreTask.execute(url);
             requestTask.execute(url);
 
         } catch (Exception ex) {
@@ -154,6 +157,7 @@ public class WebService extends Service implements RequestHandler{
 
     }
 
+    //return un int aléatoire dans la range [min,max]
     private static int getRandomNumberInRange(int min, int max) {
 
         if (min >= max) {
