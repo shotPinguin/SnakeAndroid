@@ -7,11 +7,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.structit.snake.Score;
-import com.structit.snake.activity.ScoreboardActivity;
 
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
@@ -20,7 +18,6 @@ import org.w3c.dom.NodeList;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class WebService extends Service implements RequestHandler{
@@ -62,7 +59,6 @@ public class WebService extends Service implements RequestHandler{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.d("webservice", "onStartCommand");
         //instantiation d'une task (ici login) et de sa callback
         RequestTask requestTask = new RequestTask(this, new RequestHandler() {
             @Override
@@ -93,9 +89,6 @@ public class WebService extends Service implements RequestHandler{
             //stockage de l'url de base pour la réutiliser et etre tranquille si elle change
             this.apiData.path = root.getAttribute("url");
 
-            Log.d("webservice", root.getAttribute("id"));
-            Log.d("webservice", root.getAttribute("url"));
-
             //instantiation d'une task (ici score list) et de sa callback
             RequestTask requestTask = new RequestTask(this, new RequestHandler() {
                 @Override
@@ -117,8 +110,6 @@ public class WebService extends Service implements RequestHandler{
 
         mDocument.normalizeDocument();
 
-        Log.d("webservice", "notifyScore");
-
         this.apiData.scoresList = new ArrayList<Score>();
         //parcours du xml reçu pour créer une liste de scores
         NodeList nodes = mDocument.getElementsByTagName("score");
@@ -126,7 +117,6 @@ public class WebService extends Service implements RequestHandler{
         for (int i = 0; i < nodes.getLength(); i++) {
             Element element = (Element) nodes.item(i);
             Score score = new Score(element.getAttribute("value"), element.getAttribute("player"));
-            Log.d("webservice", element.getAttribute("player")+" "+element.getAttribute("value"));
             this.apiData.scoresList.add(score);
         }
 
@@ -134,13 +124,10 @@ public class WebService extends Service implements RequestHandler{
 
     public void addScore(String name, int currentScore) {
 
-        Log.d("webservice", "addScore");
-
         //instantiation d'une task (ici add score) et de sa callback
         RequestTask requestTask = new RequestTask(this, new RequestHandler() {
             @Override
             public void onResponse(Document document) {
-                Log.d("webservice", "score added");
 
                 //actualistion de la liste des scores
                 notifyScore(document);
@@ -149,7 +136,6 @@ public class WebService extends Service implements RequestHandler{
         try {
             //création d'un nom de joueur ou un nom aléatoire + ajout score en fin d'url
             URL url;
-            Log.d("webservice", name);
             if (name == "" || name == " ") {
                 url = new URL(this.apiData.path+"score?player=guest"+getRandomNumberInRange(0,9999999)+"&value="+currentScore);
             } else {
@@ -159,7 +145,6 @@ public class WebService extends Service implements RequestHandler{
             requestTask.execute(url);
 
         } catch (Exception ex) {
-            Log.d("webservice", "catch add score");
         }
 
     }

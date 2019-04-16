@@ -23,13 +23,11 @@ public class RedrawHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
-        Log.d(LOG_TAG, "Handling request...");
 
         this.mActivity.update();
     }
 
     public void request() {
-        Log.d(LOG_TAG, "Requesting handler...");
 
         this.removeMessages(0);
         sendMessageDelayed(obtainMessage(0), this.mInterval);

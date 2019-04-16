@@ -17,8 +17,6 @@ public class SnakeOnTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        Log.d(LOG_TAG, "X: " + motionEvent.getX());
-        Log.d(LOG_TAG, "Y: " + motionEvent.getY());
 
         this.mainActivity.updateDirectionPlayer(motionEvent.getX(),
                 motionEvent.getY());

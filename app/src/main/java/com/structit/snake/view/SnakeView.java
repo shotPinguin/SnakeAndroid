@@ -28,7 +28,6 @@ public class SnakeView extends GridView {
     }
 
     private void initSnakeView(Context context) {
-        Log.d(LOG_TAG, "Initializing...");
 
         setFocusable(true);
 
@@ -45,7 +44,6 @@ public class SnakeView extends GridView {
 
     @Override
     protected void updateTiles() {
-        Log.d(LOG_TAG, "Updating walls...");
 
         for (int x = 0; x < mNbTileX; x++) {
             setTile(TILE_WALL, x, 0);

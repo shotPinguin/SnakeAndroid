@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "Creating...");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -66,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        Log.d(LOG_TAG, "Starting...");
 
         super.onStart();
 
@@ -86,17 +84,14 @@ public class MainActivity extends AppCompatActivity {
             case PERMISSION_REQUEST_CODE:
                 if(grantResults.length == 4) {
                     if(grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
-                        Log.d("webservice", "autorization granted");
 
                         //pour le web service
                         Intent intent = new Intent(this, WebService.class);
 
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             startForegroundService(intent);
-                            Log.d("webservice", "startForegroundService");
                         } else {
                             startService(intent);
-                            Log.d("webservice", "startService");
                         }
                     }
                 }
@@ -126,13 +121,11 @@ public class MainActivity extends AppCompatActivity {
                 if(this.mIsStopped == true) {
                     this.mMenu.getItem(1).setIcon(R.drawable.ic_stop);
                     this.mIsStopped = false;
-                    Log.d("webservice", "started");
 
                     this.newGame();
                 } else {
                     this.mMenu.getItem(1).setIcon(R.drawable.ic_play);
                     this.mIsStopped = true;
-                    Log.d("webservice", "stoped");
                 }
 
                 isSelected = true;
@@ -144,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
                 viewScore();
 
                 this.mIsStopped = true;
-                Log.d("webservice", "scored");
                 isSelected = super.onOptionsItemSelected(item);
                 break;
 
@@ -157,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void newGame() {
-        Log.d(LOG_TAG, "Starting new game...");
 
         this.generateSnake();
         this.generateFood();
@@ -243,7 +234,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (this.mSnake.getPart(0).equals(this.mFood))
         {
-            Log.d("webservice", "plus 1");
             this.currentScore += 1;
             this.mSnake.Update(true);
             this.generateFood();
@@ -312,7 +302,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        Log.d(LOG_TAG, "Stopping...");
 
         this.mMenu.getItem(1).setIcon(R.drawable.ic_play);
         this.mIsStopped = true;
@@ -340,7 +329,6 @@ public class MainActivity extends AppCompatActivity {
 
         alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                Log.d("webservice", input.getText().toString());
                 webService.addScore(input.getText().toString(),currentScore);
                 //viewScore();
             }
@@ -354,14 +342,12 @@ public class MainActivity extends AppCompatActivity {
 
         alert.show();
 
-        Log.d("webservice", "dead");
         this.currentScore = 0;
 
         //this.viewScore();
     }
 
     public void viewScore() {
-        Log.d("webservice", "all scores");
         Intent intent = new Intent(this, ScoreboardActivity.class);
         startActivity(intent);
     }

@@ -14,8 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -50,9 +48,7 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
         try {
             do {
 
-                Log.d("webservice", "do");
                 HttpURLConnection connection = (HttpURLConnection) urls[0].openConnection();
-                Log.d("webservice", urls[0]+"");
 
                 connection.setRequestMethod(METHOD);
                 connection.setDoOutput(OUTPUT);
@@ -60,11 +56,9 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
                 connection.setReadTimeout(READ_TIMEOUT);
 
                 String c = CookieManager.getInstance().getCookie("snake");
-                Log.d("webservice", c);
                 connection.setRequestProperty("Cookie", c);
 
                 connection.connect();
-                Log.d("webservice", connection.getResponseCode()+"");
 
 
                 //code retour est egale à 200
@@ -88,8 +82,6 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
                     }
                     reader.close();
 
-                    Log.d("webservice", "Buffer: " + buffer.toString());
-
                     DocumentBuilderFactory builderFactory = DocumentBuilderFactory
                             .newInstance();
                     DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
@@ -101,17 +93,14 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
                 }
                 //code retour est egale à 403
                 else if (connection.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN) {
-                    Log.d("webservice", "forbidden");
                 }
                 //code retour est egale à 404
                 else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
-                    Log.d("webservice", "not found");
                 }
 
                 nbAttempt++;
             } while(!isConnected && nbAttempt < MAX_ATTEMPT);
         } catch(Exception ex) {
-            Log.d("webservice", "error");
         }
 
         return isConnected;

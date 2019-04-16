@@ -39,7 +39,6 @@ public abstract class GridView extends View {
         mTileSize = styledAttributes.getDimensionPixelSize(R.styleable.GridView_tileSize,
                 TILE_DEFAULT_SIZE);
 
-        Log.d(LOG_TAG, "Tile size: " + mTileSize);
 
         styledAttributes.recycle();
     }
@@ -55,7 +54,6 @@ public abstract class GridView extends View {
         mTileSize = styledAttributes.getDimensionPixelSize(R.styleable.GridView_tileSize,
                 TILE_DEFAULT_SIZE);
 
-        Log.d(LOG_TAG, "Tile size: " + mTileSize);
 
         styledAttributes.recycle();
     }
@@ -79,7 +77,6 @@ public abstract class GridView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-        Log.d(LOG_TAG, "Drawing...");
 
         super.onDraw(canvas);
 
@@ -99,9 +96,6 @@ public abstract class GridView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         mNbTileX = (int) Math.floor(w / mTileSize);
         mNbTileY = (int) Math.floor(h / mTileSize);
-
-        Log.d(LOG_TAG, "Nb tile - X: " + mNbTileX);
-        Log.d(LOG_TAG, "Nb tile - Y: " + mNbTileY);
 
         mOffsetX = ((w - (mTileSize * mNbTileX)) / 2);
         mOffsetY = ((h - (mTileSize * mNbTileY)) / 2);
