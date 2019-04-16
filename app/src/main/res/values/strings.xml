@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">snake</string>
     <string name="menu_start">New game</string>
+    <string name="menu_score">Scores</string>
 </resources>

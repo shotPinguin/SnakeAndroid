@@ -1,5 +1,7 @@
 package com.structit.snake;
 
+import com.structit.snake.activity.MainActivity;
+
 import java.util.LinkedList;
 
 public class Snake {

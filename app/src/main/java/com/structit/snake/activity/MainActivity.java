@@ -1,18 +1,25 @@
-package com.structit.snake;
+package com.structit.snake.activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
-import com.structit.snake.service.ApiData;
+import com.structit.snake.Point;
+import com.structit.snake.R;
+import com.structit.snake.handler.RedrawHandler;
+import com.structit.snake.Snake;
 import com.structit.snake.service.WebService;
 import com.structit.snake.view.SnakeOnTouchListener;
 import com.structit.snake.view.SnakeView;
@@ -117,18 +124,28 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.start:
                 if(this.mIsStopped == true) {
-                    this.mMenu.getItem(0).setIcon(R.drawable.ic_stop);
+                    this.mMenu.getItem(1).setIcon(R.drawable.ic_stop);
                     this.mIsStopped = false;
                     Log.d("webservice", "started");
 
                     this.newGame();
                 } else {
-                    this.mMenu.getItem(0).setIcon(R.drawable.ic_play);
+                    this.mMenu.getItem(1).setIcon(R.drawable.ic_play);
                     this.mIsStopped = true;
                     Log.d("webservice", "stoped");
                 }
 
                 isSelected = true;
+                break;
+
+            case R.id.score:
+                this.mMenu.getItem(0).setIcon(R.drawable.ic_trophy);
+
+                viewScore();
+
+                this.mIsStopped = true;
+                Log.d("webservice", "scored");
+                isSelected = super.onOptionsItemSelected(item);
                 break;
 
             default:
@@ -242,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                 this.mSnake.getPart(0).getY() > this.mSnakeView.getNbTileY()-2 ||
                 this.mSnake.isBitting())
         {
-            this.mMenu.getItem(0).setIcon(R.drawable.ic_play);
+            this.mMenu.getItem(1).setIcon(R.drawable.ic_play);
             this.mIsStopped = true;
 
             this.endGame();
@@ -297,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         Log.d(LOG_TAG, "Stopping...");
 
-        this.mMenu.getItem(0).setIcon(R.drawable.ic_play);
+        this.mMenu.getItem(1).setIcon(R.drawable.ic_play);
         this.mIsStopped = true;
 
         Intent intent = new Intent(this, WebService.class);
@@ -309,15 +326,49 @@ public class MainActivity extends AppCompatActivity {
 
     //envoie du score dans le web service lors du game over
     public void endGame() {
-        WebService webService = new WebService();
-        webService.addScore(this.currentScore);
+        final WebService webService = new WebService();
+        final int currentScore = this.currentScore;
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("GAME OVER");
+        alert.setMessage("your score : "+currentScore);
+
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        alert.setView(input);
+
+        alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                Log.d("webservice", input.getText().toString());
+                webService.addScore(input.getText().toString(),currentScore);
+                //viewScore();
+            }
+        });
+
+        alert.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+
+        alert.show();
 
         Log.d("webservice", "dead");
+        this.currentScore = 0;
 
-        this.viewScore();
+        //this.viewScore();
     }
 
     public void viewScore() {
         Log.d("webservice", "all scores");
+        Intent intent = new Intent(this, ScoreboardActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+
     }
 }

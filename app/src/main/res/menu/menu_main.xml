@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/score"
+        android:icon="@drawable/ic_trophy"
+        android:title="@string/menu_score"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/start"
         android:icon="@drawable/ic_play"
         android:title="@string/menu_start"

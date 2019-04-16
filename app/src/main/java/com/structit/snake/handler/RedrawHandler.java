@@ -1,8 +1,10 @@
-package com.structit.snake;
+package com.structit.snake.handler;
 
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.structit.snake.activity.MainActivity;
 
 public class RedrawHandler extends Handler {
     private final String LOG_TAG = RedrawHandler.class.getName();

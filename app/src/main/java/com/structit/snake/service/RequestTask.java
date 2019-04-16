@@ -67,7 +67,7 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
                 Log.d("webservice", connection.getResponseCode()+"");
 
 
-                //HttpURLConnection.HTTP_OK est egale à 200
+                //code retour est egale à 200
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     Map<String, List<String>> headerFields = connection.getHeaderFields();
                     List<String> cookiesHeader = headerFields.get("Set-Cookie");
@@ -98,6 +98,14 @@ public class RequestTask extends AsyncTask<URL, Void, Boolean> {
                     this.mDocument = documentBuilder.parse(inputSource);
 
                     isConnected = true;
+                }
+                //code retour est egale à 403
+                else if (connection.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+                    Log.d("webservice", "forbidden");
+                }
+                //code retour est egale à 404
+                else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+                    Log.d("webservice", "not found");
                 }
 
                 nbAttempt++;

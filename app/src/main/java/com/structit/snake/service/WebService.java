@@ -7,9 +7,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.structit.snake.Score;
+import com.structit.snake.activity.ScoreboardActivity;
 
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
@@ -114,10 +116,10 @@ public class WebService extends Service implements RequestHandler{
     public void notifyScore(Document mDocument) {
 
         mDocument.normalizeDocument();
-        Element root = mDocument.getDocumentElement();
 
         Log.d("webservice", "notifyScore");
 
+        this.apiData.scoresList = new ArrayList<Score>();
         //parcours du xml reçu pour créer une liste de scores
         NodeList nodes = mDocument.getElementsByTagName("score");
 
@@ -130,7 +132,7 @@ public class WebService extends Service implements RequestHandler{
 
     }
 
-    public void addScore(int currentScore) {
+    public void addScore(String name, int currentScore) {
 
         Log.d("webservice", "addScore");
 
@@ -139,15 +141,25 @@ public class WebService extends Service implements RequestHandler{
             @Override
             public void onResponse(Document document) {
                 Log.d("webservice", "score added");
+
+                //actualistion de la liste des scores
+                notifyScore(document);
             }
         });
         try {
-            //création d'un nom de joueur aléatoire + ajout score en fin d'url
-            URL url = new URL(this.apiData.path+"score?player=guest"+getRandomNumberInRange(0,9999999)+"&value="+currentScore);
+            //création d'un nom de joueur ou un nom aléatoire + ajout score en fin d'url
+            URL url;
+            Log.d("webservice", name);
+            if (name == "" || name == " ") {
+                url = new URL(this.apiData.path+"score?player=guest"+getRandomNumberInRange(0,9999999)+"&value="+currentScore);
+            } else {
+                url = new URL(this.apiData.path+"score?player="+name+"&value="+currentScore);
+            }
+
             requestTask.execute(url);
 
         } catch (Exception ex) {
-
+            Log.d("webservice", "catch add score");
         }
 
     }

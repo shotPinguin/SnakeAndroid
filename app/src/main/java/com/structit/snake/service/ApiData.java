@@ -33,4 +33,27 @@ public class ApiData {
 
     }
 
+    public static String getPath() {
+        return path;
+    }
+
+    public static void setPath(String path) {
+        ApiData.path = path;
+    }
+
+    public static String getId() {
+        return id;
+    }
+
+    public static void setId(String id) {
+        ApiData.id = id;
+    }
+
+    public static List<Score> getScoresList() {
+        return scoresList;
+    }
+
+    public static void setScoresList(List<Score> scoresList) {
+        ApiData.scoresList = scoresList;
+    }
 }
